@@ -6,7 +6,7 @@ __pycache__/
 # C extensions
 *.so
 
-
+.Rhistory
 *.csv
 
 # Distribution / packaging
