@@ -82,10 +82,46 @@ assert school_data.isna().sum().all() == 0
 
 #%%
 """
+Attendance avg
+"""
+attend = []
+
+for i in range(50):
+    attend.append((school_data['Student_Attendance_Year_1_Pct'][i]+school_data['Student_Attendance_Year_2_Pct'][i])/2)
+
+school_data['Stud_Attend'] = attend
+
+#%%
+"""
+Suspension avg
+"""
+suspend = []
+
+for i in range(50):
+    suspend.append((school_data['Suspensions_Per_100_Students_Year_1_Pct'][i]+school_data['Suspensions_Per_100_Students_Year_2_Pct'][i])/2)
+
+school_data['Suspension'] = suspend
+
+#%%
+"""
+Percentage of low income students
+"""
+avg = []
+for i in range(50):
+    avg.append(school_data['Student_Count_Low_Income'][i]/school_data['Student_Count_Total'][i])
+
+school_data['Percent_Low_Income'] = avg
+
+#%%
+"""
 Merge with Crime data to prepare for analysis
 """
 
+school_data.drop(['Student_Count_Low_Income','Student_Count_Total','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct'], axis=1, inplace=True)
+
 sas_data = pd.merge(school_data, crime_totals, how="inner", on="Ward")
+
+sas_data.set_index("Ward", inplace=True)
 
 #%%
 
