@@ -53,7 +53,7 @@ high_school = school[school['Grade_Cat'] == 'HS']
 col_names = ['WARD_15','Student_Count_Total','Student_Count_Low_Income','Graduation_Rate_School','College_Enrollment_Rate_School', 'School_Survey_Involved_Families',
              'School_Survey_Supportive_Environment','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct']
 
-hs_regression = school[col_names]
+hs_regression = high_school[col_names]
 hs_regression.info()
 
 
@@ -86,7 +86,7 @@ Attendance avg
 """
 attend = []
 
-for i in range(50):
+for i in range(len(school_data)):
     attend.append((school_data['Student_Attendance_Year_1_Pct'][i]+school_data['Student_Attendance_Year_2_Pct'][i])/2)
 
 school_data['Stud_Attend'] = attend
@@ -97,7 +97,7 @@ Suspension avg
 """
 suspend = []
 
-for i in range(50):
+for i in range(len(school_data)):
     suspend.append((school_data['Suspensions_Per_100_Students_Year_1_Pct'][i]+school_data['Suspensions_Per_100_Students_Year_2_Pct'][i])/2)
 
 school_data['Suspension'] = suspend
@@ -107,7 +107,7 @@ school_data['Suspension'] = suspend
 Percentage of low income students
 """
 avg = []
-for i in range(50):
+for i in range(len(school_data)):
     avg.append(school_data['Student_Count_Low_Income'][i]/school_data['Student_Count_Total'][i])
 
 school_data['Percent_Low_Income'] = avg
