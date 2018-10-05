@@ -51,7 +51,8 @@ school = pd.read_csv("total_school_data.csv")
 high_school = school[school['Grade_Cat'] == 'HS']
 
 col_names = ['WARD_15','Student_Count_Total','Student_Count_Low_Income','Graduation_Rate_School','College_Enrollment_Rate_School', 'School_Survey_Involved_Families',
-             'School_Survey_Supportive_Environment','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct']
+             'School_Survey_Supportive_Environment','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct',
+             'One_Year_Dropout_Rate_Year_1_Pct', 'One_Year_Dropout_Rate_Year_2_Pct', 'Teacher_Attendance_Year_1_Pct', 'Teacher_Attendance_Year_2_Pct']
 
 hs_regression = high_school[col_names]
 hs_regression.info()
@@ -93,6 +94,17 @@ school_data['Stud_Attend'] = attend
 
 #%%
 """
+Teacher Attendance Avg
+"""
+t_attend = []
+
+for i in range(len(school_data)):
+    t_attend.append((school_data['Teacher_Attendance_Year_1_Pct'][i]+school_data['Teacher_Attendance_Year_2_Pct'][i])/2)
+
+school_data['Teach_Attend'] = t_attend
+
+#%%
+"""
 Suspension avg
 """
 suspend = []
@@ -101,6 +113,18 @@ for i in range(len(school_data)):
     suspend.append((school_data['Suspensions_Per_100_Students_Year_1_Pct'][i]+school_data['Suspensions_Per_100_Students_Year_2_Pct'][i])/2)
 
 school_data['Suspension'] = suspend
+
+#%%
+"""
+Dropout rate 
+"""
+
+dropout = []
+
+for i in range(len(school_data)):
+    dropout.append((school_data['One_Year_Dropout_Rate_Year_1_Pct'][i]+school_data['One_Year_Dropout_Rate_Year_2_Pct'][i])/2)
+
+school_data['Dropout_Rate'] = dropout
 
 #%%
 """
@@ -117,7 +141,8 @@ school_data['Percent_Low_Income'] = avg
 Merge with Crime data to prepare for analysis
 """
 
-school_data.drop(['Student_Count_Low_Income','Student_Count_Total','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct'], axis=1, inplace=True)
+school_data.drop(['Student_Count_Low_Income','Student_Count_Total','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct','Teacher_Attendance_Year_1_Pct', 'Teacher_Attendance_Year_2_Pct',
+                  'One_Year_Dropout_Rate_Year_1_Pct', 'One_Year_Dropout_Rate_Year_2_Pct'], axis=1, inplace=True)
 
 sas_data = pd.merge(school_data, crime_totals, how="inner", on="Ward")
 
@@ -126,3 +151,4 @@ sas_data.set_index("Ward", inplace=True)
 #%%
 
 sas_data.to_csv("sas_ready.csv")
+
