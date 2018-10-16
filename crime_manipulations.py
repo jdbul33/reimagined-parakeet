@@ -52,7 +52,9 @@ high_school = school[school['Grade_Cat'] == 'HS']
 
 col_names = ['WARD_15','Student_Count_Total','Student_Count_Low_Income','Graduation_Rate_School','College_Enrollment_Rate_School', 'School_Survey_Involved_Families',
              'School_Survey_Supportive_Environment','Suspensions_Per_100_Students_Year_1_Pct','Suspensions_Per_100_Students_Year_2_Pct','Student_Attendance_Year_1_Pct','Student_Attendance_Year_2_Pct',
-             'One_Year_Dropout_Rate_Year_1_Pct', 'One_Year_Dropout_Rate_Year_2_Pct', 'Teacher_Attendance_Year_1_Pct', 'Teacher_Attendance_Year_2_Pct']
+             'One_Year_Dropout_Rate_Year_1_Pct', 'One_Year_Dropout_Rate_Year_2_Pct', 'Teacher_Attendance_Year_1_Pct', 'Teacher_Attendance_Year_2_Pct', 'Dress_Code',
+             'Average_ACT_School',  'School_Survey_Ambitious_Instruction', 
+             'School_Survey_Effective_Leaders', 'School_Survey_Collaborative_Teachers', 'School_Survey_Safety']
 
 hs_regression = high_school[col_names]
 hs_regression.info()
@@ -65,10 +67,24 @@ Changing survery scores to numeric
 ordered_score = ['NOT ENOUGH DATA', 'VERY WEAK', 'WEAK', 'NEUTRAL', 'STRONG', 'VERY STRONG']
 hs_regression['Family_Score'] = hs_regression['School_Survey_Involved_Families'].astype("category", ordered=True, categories=ordered_score).cat.codes    
 hs_regression['Support_Score'] = hs_regression['School_Survey_Supportive_Environment'].astype("category", ordered=True, categories=ordered_score).cat.codes    
+hs_regression['Safety_Score'] = hs_regression['School_Survey_Safety'].astype("category", ordered=True, categories=ordered_score).cat.codes    
+hs_regression['Teacher_Collab_Score'] = hs_regression['School_Survey_Collaborative_Teachers'].astype("category", ordered=True, categories=ordered_score).cat.codes    
+hs_regression['Leader_Score'] = hs_regression['School_Survey_Effective_Leaders'].astype("category", ordered=True, categories=ordered_score).cat.codes    
+hs_regression['Amb_Instruct_Score'] = hs_regression['School_Survey_Ambitious_Instruction'].astype("category", ordered=True, categories=ordered_score).cat.codes    
 
-hs_regression = hs_regression.drop(['School_Survey_Supportive_Environment', 'School_Survey_Involved_Families'], axis=1)
 
+hs_regression = hs_regression.drop(['School_Survey_Supportive_Environment', 'School_Survey_Involved_Families', 'School_Survey_Effective_Leaders', 'School_Survey_Collaborative_Teachers', 'School_Survey_Safety','School_Survey_Ambitious_Instruction'], axis=1)
 
+#%%
+"""
+Make Dress Code Dummy
+"""
+
+for i in range(len(hs_regression)):
+    if hs_regression['Dress_Code'].iloc[i] == 'Y':
+        hs_regression['Dress_Code'].iloc[i] = 1
+    else:
+        hs_regression['Dress_Code'].iloc[i] = 0
 
 
 #%%
@@ -135,6 +151,8 @@ for i in range(len(school_data)):
     avg.append(school_data['Student_Count_Low_Income'][i]/school_data['Student_Count_Total'][i])
 
 school_data['Percent_Low_Income'] = avg
+
+
 
 #%%
 """
