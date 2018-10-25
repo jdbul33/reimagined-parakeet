@@ -60,23 +60,84 @@ Two examples of macro-level crime regression, ones that are very similar in natu
 
 The second analysis built upon the previous study by taking different regression estimators (beyond OLS) and compared the results when modeled as a predictive algorithm.  In the best OLS estimate, included variables consisted of number of vacant home units, overpopulation percentage, unemployment, number of police, and police department budget.\cite{salinas_crime}  While these variables do not relate to public school data, as will be examined later, this stands as an excellent example and guide to modeling crime rates via OLS on a macro-level.
 
-	\section{Methods}
+	\section{Data}
 
 
-\subsection{Data}
+\subsection{Procurement \& Preprocessing}
 
 All of the data used in this regression analysis is freely available at the city's Open Data Portal.\cite{c1data}\cite{c2data}\cite{s1data}\cite{s2data}\cite{s3data}  The school data consisted of different metrics and information spread over three data files.  These datasets were able to be merged by school ID.  High schools were then isolated, and the variables were averaged by ward.\footnote{Not all of the 50 wards contained a high school.  So while 50 wards exist, this research only takes 48 into account.}  Imputation by median value was conducted where necessary.
 
 \par
 
-The crime data was contained in two datasets from 2016 and 2017.  Each record was a reported instance of a crime and contained attributes regarding location, type of crime, UCR code, and other information.  The two years of data were combined; then, crimes that occurred outside of the 2016-2017 school year were dropped.  The total number of crimes, as well as the total number of homicides, were summed by ward.  The school data was then joined to the crime data by ward to create the final dataset used in this regression analysis.\footnote{This data preprocessing was conducted using R and Python.  Scripts and data can be found in the GitHub repository for this project at \href{https://github.com/jdbul33/reimagined-parakeet}{https://github.com/jdbul33/reimagined-parakeet}}.
+The crime data was contained in two datasets from 2016 and 2017.  Each record was a reported instance of a crime and contained attributes regarding location, type of crime, UCR code, and other information.  The two years of data were combined; then, crimes that occurred outside of the 2016-2017 school year were dropped.  The total number of crimes, as well as the total number of homicides, were summed by ward.  The school data was then joined to the crime data by ward to create the final dataset used in this regression analysis.\footnote{This data preprocessing was conducted using R and Python.  Scripts and data can be found in the GitHub repository for this project at \href{https://github.com/jdbul33/reimagined-parakeet}{https://github.com/jdbul33/reimagined-parakeet}.}
 
 
 \subsection{Variables}
 
+\paragraph{Dependent Variables}
+Relevant variables were chosen from this final dataset, upon which the regression will be built.  The two dependent variables were identified as total crime instances and total homicide count by ward for the 2016-2017 school year.  The basic statistical description of these variables can be seen in Table 1.
+
+\begin{center}
+	\begin{table}[h]
+	\begin{tabular}{ c | c | c | c | c | c }
+		
+		 & \textbf{Mean} & \textbf{Median} & \textbf{Std. Dev.} & \textbf{Minimum} & \textbf{Maximum} \\ 
+		 \hline
+		 \textbf{Total Crime} & 4,194 & 3,280 & 2327 & 1,824 & 12,057 \\
+		 \textbf{Homicides} & 12 & 7.5 & 11.7 & 0 & 45 \\
+    
+	\end{tabular}
+\caption{Descriptive statistics of the dependent variables for Chicago by ward}
+\end{table}
+\end{center}  
+
+\paragraph{Independent Variables}
+Independent variables were then identified from the dataset, based on theory, prior work on this subject, and availability.  OLS necessitates that all variables used with the estimator must be stated numerically; therefore, all chosen variables are either numeric or able to be translated as such.\footnote{Dress Code is a dummy, binary variable.  Schools with a dress code are valued at 1, while those without a dress code are denoted by 0.  Therefore, each ward will have a dress code value of 0-1, depending on the mix of high schools in that ward.}\footnote{Survey variables result from surveys given to teachers and students to rank their school in five criteria:  supportive environment, involved families, school safety, collaborative teaching, and ambitious instruction.  Scoring is from 0-5 with 5 being the best.}  This precluded many free-format data fields consisting of comments or non-ordinal evaluation.  The chosen variables, and their descriptive statistics, can be seen in Table 2.  These consist of the initial variables that were evaluated for regression analysis, not the final model's variables.
+
+\begin{center}
+	\begin{table}[h]
+		\begin{tabular}{ c | c | c | c | c | c }
+			
+			& \textbf{Mean} & \textbf{Median} & \textbf{Std. Dev.} & \textbf{Minimum} & \textbf{Maximum} \\ 
+			\hline
+			\textbf{Graduation Rate} & 72.9\% & 74.6\% & 13.7\% & 27.8\% & 93.5\% \\
+			\textbf{College Enrollment} & 49.3\% & 50.2\% & 18.0\% & 10.8\% & 85.7\% \\
+			\textbf{Dress Code} & 0.6 & 0.6 & 0.4 & 0 & 1\\
+			\textbf{Average ACT Score} & 17.0 & 16.8 & 2.2 & 13.1 & 22.3\\
+			\textbf{Survey-Supportive} & 3.3 & 3.4 & 0.7 & 1 & 5\\
+			\textbf{Survey-Families} & 3.2 & 3.2 & 1 & 0 & 5\\
+			\textbf{Survey-Safety} & 2.1 & 2 & 0.6 & 0.5 & 3.7\\
+			\textbf{Survey-Teachers} & 3.5 & 3.5 & 0.9 & 0 & 5\\
+			\textbf{Survey-Instruction} & 3.7 & 4 & 0.8 & 1.5 & 5\\
+			\textbf{Student Attendance} & 85.5\% & 87.8\% & 7.6\% & 53.8\% & 95.4\% \\
+			\textbf{Teacher Attendance} & 92.5\% & 92.6\% & 0.6\% & 91.1\% & 93.6\% \\
+			\textbf{Suspensions/100 stud.} & 22.5 & 16.6 & 19 & 0.6 & 103\\
+			\textbf{Dropout Rate} & 10.3\% & 7.2\% & 8.7\% & 0.9\% & 33.4\% \\
+			\textbf{Low Income Students} & 85.5\% & 90.2\% & 10.8\% & 54.3\% & 95.7\% 
+			
+		\end{tabular}
+		\caption{Descriptive statistics of candidate independent variables for Chicago high schools by ward}
+	\end{table}
+\end{center}
+
+These candidate variables were then evaluated for multicollinearity, as correlated independent variables violate one of the basic assumptions of OLS.  This was completed visually (since the number of variables chosen was relatively small) utilizing R, a statistical software.  The resulting correlations can be seen in Figure 1.  This information was referenced as final variables were selected.
+
+	\begin{figure}
+		\includegraphics[scale=.33]{pairplot.png}
+		\caption{Visualization of correlations and distributions of candidate independent variables}
+	\end{figure}
 
 \subsection{Model}
 
+The model chosen to explain crime as a function of public school data was a linear regression, using Ordinary Least Squares as the estimator.  The variables shown in Table 2 represent all of the possible attributes from the data that could theoretically serve as a predictor and that could be coded in a numeric format, as explained earlier.  In order to narrow these variables into an initial model, stepwise regression was utilized.  This was conducted using R, with a separate analysis conducted for each of the dependent variables:  total crime and total homicides.  Once completed, these selected variables were tested for multicollinearity and heteroskedacity, analyzed as a regression in SAS, and then subsequently worked into the best possible linear regression given the data.
+
+\paragraph{Total Crime}
+
+The stepwise regression for this analysis used Total Crime as the dependent variable and all of the initial variables in Table 2 as a starting point.  After running this analysis, the independent variables detected as most important
+
+
+
+\paragraph{Total Homicides}
 
 
 	\section{Analysis}
@@ -100,7 +161,6 @@ The crime data was contained in two datasets from 2016 and 2017.  Each record wa
 
 
 	\newpage
-	\pagenumbering{gobble}
 	\begin{thebibliography}{12}
 	
 \bibitem{sanburn}
