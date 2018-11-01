@@ -6,7 +6,7 @@ library(GGally)
 library(caret)
 
 df <- data %>%
-        select(-TotalHomicides, -Ward)
+        select(-TotalCrime, -Ward)
 
 corr_mat <- round(cor(df),2)
 #ggpairs(df)
@@ -14,9 +14,9 @@ corr_mat <- round(cor(df),2)
 
 
 
-null <- lm(TotalCrime ~ 1, data=df)
+null <- lm(TotalHomicides ~ 1, data=df)
 
-full <- lm(TotalCrime ~ ., data=df)
+full <- lm(TotalHomicides ~ ., data=df)
 
 
 
@@ -24,3 +24,5 @@ answer3 <- step(null, scope=list(lower=null, upper=full), direction="forward")
 answer2 <- step(full, data=df, direction="backward")
 answer <- step(null, scope = list(upper=full), data=df, direction="both")
 answer2
+answer
+answer3

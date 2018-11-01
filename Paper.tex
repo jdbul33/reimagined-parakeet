@@ -1,7 +1,7 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
-\usepackage[margin=1.25in]{geometry}
+\usepackage[margin=1in]{geometry}
 \usepackage[utf8]{inputenc}
 \graphicspath{ {./Figures/} }
 \hypersetup{
@@ -106,6 +106,7 @@ Independent variables were then identified from the dataset, based on theory, pr
 			\textbf{Average ACT Score} & 17.0 & 16.8 & 2.2 & 13.1 & 22.3\\
 			\textbf{Survey-Supportive} & 3.3 & 3.4 & 0.7 & 1 & 5\\
 			\textbf{Survey-Families} & 3.2 & 3.2 & 1 & 0 & 5\\
+			\textbf{Survey-Leadership} & 3.1 & 3.2 0.9 & 0 & 5\\
 			\textbf{Survey-Safety} & 2.1 & 2 & 0.6 & 0.5 & 3.7\\
 			\textbf{Survey-Teachers} & 3.5 & 3.5 & 0.9 & 0 & 5\\
 			\textbf{Survey-Instruction} & 3.7 & 4 & 0.8 & 1.5 & 5\\
@@ -122,26 +123,78 @@ Independent variables were then identified from the dataset, based on theory, pr
 
 These candidate variables were then evaluated for multicollinearity, as correlated independent variables violate one of the basic assumptions of OLS.  This was completed visually (since the number of variables chosen was relatively small) utilizing R, a statistical software.  The resulting correlations can be seen in Figure 1.  This information was referenced as final variables were selected.
 
-	\begin{figure}
+	\begin{figure}[h]
 		\includegraphics[scale=.33]{pairplot.png}
 		\caption{Visualization of correlations and distributions of candidate independent variables}
 	\end{figure}
 
-\subsection{Model}
+\subsection{Variable Selection \& Model Estimation}
 
-The model chosen to explain crime as a function of public school data was a linear regression, using Ordinary Least Squares as the estimator.  The variables shown in Table 2 represent all of the possible attributes from the data that could theoretically serve as a predictor and that could be coded in a numeric format, as explained earlier.  In order to narrow these variables into an initial model, stepwise regression was utilized.  This was conducted using R, with a separate analysis conducted for each of the dependent variables:  total crime and total homicides.  Once completed, these selected variables were tested for multicollinearity and heteroskedacity, analyzed as a regression in SAS, and then subsequently worked into the best possible linear regression given the data.
+The model chosen to explain crime as a function of public school data was a regression using Ordinary Least Squares as the estimator.  The variables shown in Table 2 represent all of the possible attributes from the data that could theoretically serve as a predictor and that could be coded in a numeric format, as explained earlier.  In order to narrow these variables into an initial model, stepwise regression was utilized.  This was conducted using R, with a separate analysis conducted for each of the dependent variables:  total crime and total homicides.  Once completed, these selected variables were tested for multicollinearity and heteroscedasticity, using Variance Inflation Factors and White's test respectively, analyzed as a regression in SAS, and then subsequently worked into the best possible model given the data.
 
 \paragraph{Total Crime}
 
-The stepwise regression for this analysis used Total Crime as the dependent variable and all of the initial variables in Table 2 as a starting point.  After running this analysis, the independent variables detected as most important
+The stepwise regression for this analysis used Total Crime as the dependent variable and all of the initial variables in Table 2 as a starting point.  After running this analysis, the independent variables detected as most important were identified as graduation rate, college enrollment rate, dress code, effective leadership survey score, average ACT score, involved family survey score and dropout rate.  Upon examination using plots in Figure 1, the two survey score variables were found to have a correlation coefficient of 0.83.  This is above a commonly used threshold of 0.8, and thus supportive family survey score was dropped from the estimated model.  This was dropped after comparing regression results after omitting each of the two variables, using adjusted R-squared as the measure.
 
+\par
+
+The aforementioned variables were then run using \textit{PROC REG}, the regression command in SAS.  Upon evaluation, average ACT score and the leadership survey variables stood out with unacceptable high p-values of 0.90 and 0.19, respectively.  These variables were then dropped from the estimate, and the regression was recalculated.  The results can be seen in Table 3.
+
+
+
+\begin{center}
+	\begin{table}[h]
+		\begin{tabular}{ c | c | c | c | c | c }
+			
+			& \textbf{Mean} & \textbf{Median} & \textbf{Std. Dev.} & \textbf{Minimum} & \\
+			\hline
+			
+			
+		\end{tabular}
+		\caption{Coefficients, standard error, and p-values for linear regression of total crime}
+	\end{table}
+\end{center}
+
+As can be seen above, all selected variables have acceptable p-values that fall below the commonly-held threshold of 0.05.  Furthermore, all variables included pass the White test for heteroscedasticity adjustment and have suitably low Variance Inflation Factors, as can be seen in Table 4.  For the White adjustment for heteroscedasticity shows that all of the included variables maintain an acceptably low p-value and standard error.  A Variance Inflation Factor of less than 5 is typically accepted as not indicating severe multicollinearity, and all of the included variables fall below this limit.
+
+\par
+
+OVERALL THE REGRESSION QUALITY
+
+\begin{center}
+	\begin{table}[h]
+		\begin{tabular}{ c | c | c | c | c | c }
+			
+			& \textbf{Mean} & \textbf{Median} & \textbf{Std. Dev.} & \textbf{Minimum} & \\
+			\hline
+			
+			
+		\end{tabular}
+		\caption{Heteroscedasticity and multicollinearity test results for linear regression model of total crime}
+	\end{table}
+\end{center}
 
 
 \paragraph{Total Homicides}
 
 
-	\section{Analysis}
+
+
+
+
+
+
+
+
+
+	\section{Analysis of Regression Estimate Quality}
 	
+BRIEF INTRO HERE
+
+	\paragraph{Total Crime Regression}
+
+	\paragraph{Total Homicide Regression}
+
 
 
 	\section{Discussion}
