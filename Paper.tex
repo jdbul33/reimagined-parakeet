@@ -1,8 +1,10 @@
 \documentclass[12pt]{article}
 \usepackage{graphicx}
 \usepackage{hyperref}
+\usepackage{pdfpages}
 \usepackage[margin=1in]{geometry}
 \usepackage[utf8]{inputenc}
+\usepackage[title]{appendix}
 \graphicspath{ {./Figures/} }
 \hypersetup{
     colorlinks=true,
@@ -44,7 +46,7 @@ This analysis will focus on crime rate as a function of independent variables id
 
 Researchers from all disciplines have sought to shed light on the driving force that leads to crime.  While many data mining methods are capable of exploring relationships between variables driving crime, regression remains on of the most widely accepted.\cite{kaur}  This is in part due to the clearly defined effects of the independent variables on the dependent variable, which is lacking in many state-of-the-art data science algorithms (known as ``black box algorithms").
 
-\paragraph{Micro-Level}
+\subsection{Micro-Level}
 
 Many instances of regression analysis on micro-level crime data have been explored and documented.  In light of the high school focus of this analysis, prior work centered on juvenile subjects is of utmost interest.  Alcohol abuse among juveniles is exhibits a statistically significant relationship with crime rates, leading researchers to suspect a possible causal effect.\cite{fergusson}  Relationships between nicotine dependence and cannabis abuse with crime have also be identified via regression analysis.\cite{ferg2}  Additionally, the association with ``deviant peers" was shown to have a significant effect on likelihood to commit a crime.  Deviant peers were measured as a scale score from the number of the subject's friends who engaged in substance abuse, received school discipline and suspensions, or who broke the law.  While the effect of peer deviation on crime likelihood appears to decrease as maturity is reached, it has a substantial effect during high school years.\cite{ferg2}
 
@@ -52,7 +54,7 @@ Many instances of regression analysis on micro-level crime data have been explor
 
 A enlightening micro-level study by Azim Shariff and Mijke Rhemtulla used regression analysis to discover, in their samples, that beliefs in heaven and hell were the most influential independent variables in committing crimes, even when compared to more ``traditional" variables typically associated with crime.\cite{shariff}  The effects of the heaven and hell variables held true for a multitude of crimes, even when presented in a multivariate regression with common variables such as poverty level and amount of population incarcerated.  By evaluating the regression in this way, this study stands as a prime example of how some of the most influential variables could easily be overlooked.
 
-\paragraph{Macro-Level}
+\subsection{Macro-Level}
 
 Two examples of macro-level crime regression, ones that are very similar in nature to this analysis, focused on crime levels in Salinas, California.  The first paper, written in 2009, examines various socio-economic indicators as variables in a regression of violent crime.  These indicators included public school metrics, notably dropout rate, graduation rate, and attendance.  All of these metrics were found to have some level of relationship with crime levels.\cite{salinas_env}
 
@@ -203,13 +205,14 @@ TotalHomicides = 16.3 - 0.236*GraduationRate + 0.045*CollegeEnrollmentRate + 12.
 	\paragraph{Fit}
 
 	The linear model for total crime as a function of the aforementioned four variable exhibits a fairly reasonable level of fit.  It has a $ R^{2} $ value of 0.3154 and a $ \bar{R}^{2} $ of 0.2518.  Both metrics measure overall fit on a scale from 0-1, with $ \bar{R}^{2} $ ``penalizing" for the addition of more variables.  Since this is a multivariate regression, both metrics must be taken into account.  The values for these suggest that this is a model that is indeed indicative of a relationship.  The chosen variables maximize these metrics given the data at hand, since the variables were chosen utilizing a stepwise regression algorithm set to maximize $ \bar{R}^{2} $.
-	\par
-	
-	A regression's F-value ajfl;fafjasflasjflajlf
 	
 	\par
 	
 	Furthermore, all variables in this regression estimate have p-values that are low enough to be considered statistically significant.  For this measure, a standard p-value of less than 0.05 is considered to be significant.  Since all of the variables exhibit this, the null hypothesis, which states that the coefficient is expected to be zero, is rejected.
+	
+	\par
+	
+	A regression's F-value is a measure of the model's overall significance when compared to the null hypothesis, which states that the expected coefficients for all of the variables is zero.  While the F-value can range from 0 to an arbitrarily large number, the best measure of its significance is its corresponding p-value.  In this regression model, the p-value was found to be 0.0023.  This is below the established threshold of 0.05 for statistical significance, and the null hypothesis is rejected.
 
 	\paragraph{Potential Issues}All variables included in the total crime regression pass the White test for heteroscedasticity adjustment and have suitably low Variance Inflation Factors, as can be seen in Table 4.  For the White adjustment for heteroscedasticity shows that all of the included variables maintain an acceptably low p-value and standard error.  A Variance Inflation Factor of less than 5 is typically accepted as not indicating severe multicollinearity, and all of the included variables fall below this limit.
 
@@ -232,27 +235,11 @@ TotalHomicides = 16.3 - 0.236*GraduationRate + 0.045*CollegeEnrollmentRate + 12.
 
 	\subsection{Total Homicide Regression}
 
-	\paragraph{Theory}
-	When the equation estimate is viewed through the lens of theoretical relationship, it perhaps seems somewhat counterintuitive at first.  However, most of the variables' relationship to the number of total crimes can be rationalized.  It is important to note, however, that the presence of a relationship does not necessarily indication causation.  Schools with a lower graduation rates support the theory that students with less options for a future (like not possessing a high school diploma) may be more inclined to get involved with criminal activity.  This is reflected in that variable's negative coefficient.  Dress code should theoretically reduce crime by making gang affiliations less apparent, yet it has a positive relationship with crime count.  It could be the case that institution of a dress code is reactionary to crime; that is, schools in higher crime areas require a dress code in order to help with the issue.  Dropout rate has a positive relationship with crime, which furthers the argument that students with less options are perhaps more inclined to engage in crime.
-	
-	\par
-	
-	College enrollment is the one variable that is perhaps not explainable on a theoretical level.  Common sense indicates that college-bound students are perhaps less engaged in criminal activity than non-college-bound students.  Similarly, higher-crime areas would be expected to have less families with a college graduate than lower-crime areas.  However, the variable is shown to be statistically significant, and further research may be necessary to explore this relationship.
-	
-	\paragraph{Fit}
-	
-	r square and stuff
-	
-	\par
-	
-	A regression's F-value ajfl;fafjasflasjflajlf
-	
-	\par
-	
-	p-value
+	\paragraph{Theory \& Fit}  In the linear regression for total homicides, the variables all exhibited coefficients with the same indication of relationship.  Therefore, the theory explained and rationalized above extrapolates to this model as well.  The estimate's fit, however, is not as strong as the primary model.  The regression yielded a $ R^{2} $ of 0.2791 and a $ \bar{R}^{2} $ of 0.212.  These metrics are not as high as in the initial regression, suggesting that the regression does not exhibit as good of a fit.  The model has a F-value of 4.16 with a corresponding p-value of 0.0062, which shows the null hypothesis (that all expected variable coefficients should be zero) is rejected.
 	
 	\paragraph{Potential Issues}
-
+	
+	As with the prior model, the regression estimate for total homicides was subjected to standard tests for multicollinearity and heteroscedasticity.  Since the same variables were examined, the Variance Inflation Factors, indicators of multicollinearity, remain the same at acceptably low levels.  White's tests was used to produce standard errors for the coefficients, and the resulting adjusted p-values, after adjusting for any heteroscedasticity.  Some change can be seen, but it does not change the p-values by a large margin from where they were originally.
 	\begin{center}
 	\begin{table}[h]
 		\begin{tabular}{ c | c | c | c | c }
@@ -279,6 +266,25 @@ TotalHomicides = 16.3 - 0.236*GraduationRate + 0.045*CollegeEnrollmentRate + 12.
 \subsection{Opportunities for Further Work}
 
 
+
+
+
+
+
+\newpage
+
+\begin{appendices}
+
+\section{Linear Regression for Total Crime:  SAS Output}
+	
+\includepdf[pages=-]{Figures/linear_total_crime_regression.pdf}
+
+\section{Linear Regression for Total Homicides:  SAS Output}
+
+\includepdf[pages=-]{Figures/linear_total_homicides_regression.pdf}
+	
+
+\end{appendices}
 
 
 
