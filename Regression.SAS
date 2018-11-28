@@ -27,7 +27,7 @@ data crime_school;
 run;
 
 proc means data=crime_school n nmiss mean median stddev min max;
-	vars graduation_rate_school college_enrollment_rate_school dress_code average_act_school support_score family_score safety_score teacher_collab_score leader_score amb_instruct_score stud_attend teach_attend suspension dropout_rate percent_low_income totalcrime totalhomicides;
+	vars leader_score graduation_rate_school college_enrollment_rate_school dress_code average_act_school support_score family_score safety_score teacher_collab_score leader_score amb_instruct_score stud_attend teach_attend suspension dropout_rate percent_low_income totalcrime totalhomicides;
 run;
 
 
@@ -59,7 +59,7 @@ proc reg data=crime_school;
 
 
 proc reg data=crime_school;
-	model logcrime=graduation_rate_school college_enrollment_rate_school dress_code dropout_rate / vif white;
+	model logcrime=leader_score graduation_rate_school college_enrollment_rate_school dress_code dropout_rate / vif white;
 	quit;
 
 /* Using Variables for Log Homicides */
