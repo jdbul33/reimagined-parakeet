@@ -6,10 +6,11 @@ library(GGally)
 library(caret)
 
 df <- data %>%
-        select(-TotalCrime, -Ward)
+        select(-Ward)
+
 
 corr_mat <- round(cor(df),2)
-#ggpairs(df)
+ggpairs(df)
 
 
 
